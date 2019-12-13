@@ -15,8 +15,8 @@ constructor(props) {
   super(props);
   this.state = {
     citiesInfo:[],
-    searchInput:''
-
+    searchInput:'',
+     image: ''
   }
 }
 // api weather url: https://samples.openweathermap.org/data/2.5/weather?q=London&appid=8532330ab1334c1ed18e9fa9480aa16c
@@ -29,6 +29,16 @@ getWeather() {
     this.setState({citiesInfo})
   })
 }
+getImage() {
+  console.log("Get image is being called!")
+  axios.get(`https://source.unsplash.com/1600x900/?${this.state.searchInput}`)
+.then(res => {
+    const image = res.config.url;
+    this.setState({image})
+});
+}
+
+
 onChangeHandler = (event) => {
   event.preventDefault();
   this.setState({searchInput: event.target.value})
@@ -36,7 +46,12 @@ onChangeHandler = (event) => {
 onClickHandler = () => {
   console.log(this.state.citiesInfo)
   this.getWeather();
+  this.getImage();
+
  
+ }
+ componentDidMount() {
+   this.getImage();
  }
 
 render () {
@@ -52,7 +67,7 @@ render () {
        </Route>
     
     <Route path="/result"
-    render ={(props) => <CityCard {...props} citiesInfo={this.state.citiesInfo} />}
+    render ={(props) => <CityCard {...props} citiesInfo={this.state.citiesInfo} image={this.state.image} />}
     />
     </Switch>
   </Router>
